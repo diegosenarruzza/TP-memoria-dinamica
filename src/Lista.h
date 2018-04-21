@@ -62,10 +62,14 @@ public:
 private:
 
     struct Nodo {
-        // Completar
+        Nodo* anterior;
+        T _valor;
+        Nodo* siguiente;
     };
 
-    // Completar
+    Nodo* primero;
+    Nodo* ultimo;
+    int longitud;
 };
 
 #include "Lista.hpp"
