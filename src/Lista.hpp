@@ -26,21 +26,32 @@ Lista<T>::~Lista() {
 
 template <typename T>
 Lista<T>& Lista<T>::operator=(const Lista<T>& l) {
+    //Paso facil, igualo longitudes
     longitud = l.longitud;
 
-    //Solo quiero crear una lista nueva con los valores de l
+    //actual apunta a la direccion en memoria de el primero, y va a ir cambiando para ir recorriendo
+    Nodo* actual = &primero;
+    //l_actual, lo uso para ir tomando y copiando los valores
+    Nodo* l_actual = &l.primero;
 
-    Nodo* actual = primero;
-    Nodo* l_actual = l.primero;
-
-    //Necesito tomar los valores que haya en los punteros y crear nuevos punteros con esos valores
     while(l_actual!=NULL) {
-        actual->valor = l_actual->_valor;
+        Nodo* next;
+        //Siguiente de actual apunta a next
+        actual->siguiente = &next;
+        //Anteior de next apunta a nodo actual
+        next->anterior = &actual;
+        next->_valor = l_actual->_valor;
 
-
-
+        actual = &next;
+        l_actual = l_actual->siguiente;
     }
+    primero->anterior = NULL;
+    ultimo = actual;
+    ultimo->siguiente = NULL;
 
+    //Elimino los 2 punteros que tengo demas
+    delete actual;
+    delete l_actual;
 }
 
 template <typename T>
@@ -138,5 +149,9 @@ T& Lista<T>::iesimo(Nat i) {
 
 template <typename T>
 void Lista<T>::mostrar(std::ostream& o) {
-	// Completar
+    for (int i = 0; i <longitud ; i++) {
+        cout << this->iesimo(i) << "\n" ;
+    }
+
+
 }
