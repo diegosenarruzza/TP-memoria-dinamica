@@ -4,7 +4,7 @@ template <typename T>
 Lista<T>::Lista() {
     primero = NULL;
     ultimo = NULL;
-    longitud = 0;
+    tamanio= 0;
 }
 
 // Inicializa una lista vacía y luego utiliza operator= para no duplicar el
@@ -21,26 +21,26 @@ Lista<T>::~Lista() {
         delete actual;
     }
     delete next;
-    delete actual;
+
 }
 
 template <typename T>
 Lista<T>& Lista<T>::operator=(const Lista<T>& l) {
     //Paso facil, igualo longitudes
-    longitud = l.longitud;
+    tamanio= l.tamanio;
 
     //actual apunta a la direccion en memoria de el primero, y va a ir cambiando para ir recorriendo
-    Nodo* actual = &primero;
+    Nodo* actual = primero;
     //l_actual, lo uso para ir tomando y copiando los valores
-    Nodo* l_actual = &l.primero;
+    Nodo* l_actual = l.primero;
 
     while(l_actual!=NULL) {
-        Nodo* next;
+        Nodo next;
         //Siguiente de actual apunta a next
         actual->siguiente = &next;
         //Anteior de next apunta a nodo actual
-        next->anterior = &actual;
-        next->_valor = l_actual->_valor;
+        next.anterior = actual;
+        next._valor = l_actual->_valor;
 
         actual = &next;
         l_actual = l_actual->siguiente;
@@ -57,47 +57,54 @@ Lista<T>& Lista<T>::operator=(const Lista<T>& l) {
 template <typename T>
 void Lista<T>::agregarAdelante(const T& elem) {
     //Creo el nodo que va a ir al principio
-    Nodo* nuevoPrimero;
-    nuevoPrimero->anterior = NULL;
-    nuevoPrimero->_valor = elem;
-    nuevoPrimero->siguiente = &primero;
+    Nodo nuevoPrimero;
+    nuevoPrimero.anterior = NULL;
+    nuevoPrimero._valor = elem;
+    nuevoPrimero.siguiente = NULL;
 
-    //Al anterior, del primero, le asigno la direccion en memoria del nuevo nodo
-    primero->anterior = &nuevoPrimero;
-
-    //Elimino el puntero nuevoPrimero
-    delete nuevoPrimero;
+    if(primero==NULL) {
+      primero = &nuevoPrimero;
+      ultimo = &nuevoPrimero;
+    } else { //Si ya hay un elemento, el nuevo va a ser el primero
+        primero->anterior = &nuevoPrimero;
+        nuevoPrimero.siguiente = primero;
+        ultimo = primero;
+        primero = &nuevoPrimero;
+    }
 
     //Sumo uno a la longitud
-    longitud++;
-
+    tamanio++;
 }
 
 template <typename T>
 void Lista<T>::agregarAtras(const T& elem) {
     // Creo el nodo que va a ir al final
-    Nodo* nuevoUltimo;
-    nuevoUltimo->anterior = &ultimo;
-    nuevoUltimo->_valor = elem;
-    nuevoUltimo->siguiente = NULL;
+    Nodo nuevoUltimo;
+    nuevoUltimo.anterior = ultimo;
+    nuevoUltimo._valor = elem;
+    nuevoUltimo.siguiente = NULL;
 
     //Al siguiente, del ultimo, le asigno la direccion en memoria del nuevo nodo
-    ultimo->siguiente = &nuevoUltimo;
-
-    //Elimino el puntero nuevoUltimo
-    delete nuevoUltimo;
-
-    //Sumo uno a la longitud
-    longitud++;
+    if(primero==NULL){ //Si la lista esta vacia, el unico elemento va a ser primero y ultimo
+        primero = &nuevoUltimo;
+        ultimo = &nuevoUltimo;
+    } else { //Si ya hay un elemento, el nuevo va a ser el ultimo
+        ultimo->siguiente = &nuevoUltimo;
+        ultimo = &nuevoUltimo;
+    }
+    //Sumo uno a la longitudtamanio++;
+    tamanio = tamanio+1;
 }
 
 template <typename T>
 int Lista<T>::longitud() const {
-    return  longitud;
+    int largo = tamanio;
+    return largo;
 }
 
 template <typename T>
 const T& Lista<T>::iesimo(Nat i) const {
+    T iesimo;
     Nat j=0;
     Nodo* i_nodo = primero;
     //Busco el iesimo nodo
@@ -106,7 +113,9 @@ const T& Lista<T>::iesimo(Nat i) const {
         j++;
     }
     //Devuelvo el valor ubicado en la direccion de memoria del iesimo nodo
-    return i_nodo->_valor;
+    iesimo = i_nodo -> _valor;
+    delete i_nodo;
+    return iesimo;
 }
 
 template <typename T>
@@ -130,27 +139,28 @@ void Lista<T>::eliminar(Nat i) {
     //Ahora tengo el iesimo con punteros repetidos, tengo que eliminarlo
     delete i_nodo;
 
-    //Achico la longitud
-    longitud--;
+    //Achico la longitudtamanio--;
 }
 
 template <typename T>
 T& Lista<T>::iesimo(Nat i) {
     T iesimo;
     Nat j=0;
-    Nodo* nodovalor = primero;
+    Nodo* i_nodo = primero;
     while(j<i){
-        iesimo = nodovalor->_valor;
-        nodovalor = nodovalor->siguiente;
+        i_nodo = i_nodo->siguiente;
         j++;
     }
+
+    iesimo = i_nodo->_valor;
+    delete i_nodo;
     return iesimo;
 }
 
 template <typename T>
 void Lista<T>::mostrar(std::ostream& o) {
-    for (int i = 0; i <longitud ; i++) {
-        cout << this->iesimo(i) << "\n" ;
+    for (int i = 0; i <tamanio ; i++) {
+        std::cout << this->iesimo(i) << "\n" ;
     }
 
 

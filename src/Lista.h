@@ -66,10 +66,9 @@ private:
         T _valor;
         Nodo* siguiente;
     };
-
+    int tamanio;
     Nodo* primero;
     Nodo* ultimo;
-    int longitud;
 };
 
 #include "Lista.hpp"
