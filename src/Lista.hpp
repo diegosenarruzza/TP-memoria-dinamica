@@ -27,8 +27,20 @@ Lista<T>::~Lista() {
 template <typename T>
 Lista<T>& Lista<T>::operator=(const Lista<T>& l) {
     longitud = l.longitud;
-    primero = l.primero;
-    ultimo = l.ultimo;
+
+    //Solo quiero crear una lista nueva con los valores de l
+
+    Nodo* actual = primero;
+    Nodo* l_actual = l.primero;
+
+    //Necesito tomar los valores que haya en los punteros y crear nuevos punteros con esos valores
+    while(l_actual!=NULL) {
+        actual->valor = l_actual->_valor;
+
+
+
+    }
+
 }
 
 template <typename T>
